@@ -1,0 +1,4 @@
+enum Tasktype{
+  business,
+  personal,
+}
