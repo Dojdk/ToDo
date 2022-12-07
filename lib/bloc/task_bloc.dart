@@ -18,10 +18,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       emit(
         TaskState(
           allTasks: List.from(state.allTasks)
-            ..add(Task(
-                id: '${allTasks.length + 1}',
-                tasktype: event.tasktype,
-                name: event.taskname)),
+            ..insert(
+                0,
+                Task(
+                    id: '${allTasks.length + 1}',
+                    tasktype: event.tasktype,
+                    name: event.taskname)),
         ),
       );
     });

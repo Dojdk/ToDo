@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/models/task.dart';
 
-class AddTaskPage extends StatelessWidget {
+import '../bloc/task_bloc.dart';
+import '../theme/colors.dart';
+
+class AddTaskPage extends StatefulWidget {
   static const routeName = '/addtas';
   const AddTaskPage({super.key});
+
+  @override
+  State<AddTaskPage> createState() => _AddTaskPageState();
+}
+
+class _AddTaskPageState extends State<AddTaskPage> {
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +44,48 @@ class AddTaskPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(
+              height: 200,
+            ),
             Form(
               child: TextFormField(
+                controller: controller,
+                maxLines: 8,
+                cursorColor: blue,
+                cursorHeight: 50,
                 style: const TextStyle(fontSize: 30),
                 decoration: const InputDecoration(
                   hintText: 'Enter New Task',
                   hintStyle: TextStyle(fontSize: 30),
                   border: InputBorder.none,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: SizedBox(
+                height: 50,
+                width: 150,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: blue,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.read<TaskBloc>().add(
+                          AddTask(
+                              taskname: controller.text,
+                              tasktype: Tasktype.personal),
+                        );
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('New Task'),
                 ),
               ),
             ),

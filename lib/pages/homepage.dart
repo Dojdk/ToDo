@@ -47,7 +47,10 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pushNamed(AddTaskPage.routeName);
             },
-            child: const Icon(Icons.add),
+            backgroundColor: blue,
+            child: const Icon(
+              Icons.add,
+            ),
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
