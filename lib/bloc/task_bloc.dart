@@ -8,15 +8,64 @@ part 'task_event.dart';
 part 'task_state.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
-  TaskBloc() : super(TaskInitial()) {
+  TaskBloc() : super(const TaskState()) {
     on<TaskLoadEvent>((event, emit) {});
+
     on<AddTask>((event, emit) {
-      if(state is TaskLoaded){
-        
-      }
+      final state = this.state;
+      final allTasks = state.allTasks;
+
+      emit(
+        TaskState(
+          allTasks: List.from(state.allTasks)
+            ..add(Task(
+                id: '${allTasks.length + 1}',
+                tasktype: event.tasktype,
+                name: event.taskname)),
+        ),
+      );
     });
-    on<TaskIsDone>((event, emit) {});
-    on<TaskIsNotDone>((event, emit) {});
-    on<DeleteTask>((event, emit) {});
+
+    on<TaskUpdate>((event, emit) {
+      final state = this.state;
+      final task = event.task;
+      final index = state.allTasks.indexOf(task);
+      List<Task> allTasks = List.from(state.allTasks)..remove(task);
+      task.isDone == false
+          ? allTasks.insert(index, task.copyWith(isDone: true))
+          : allTasks.insert(index, task.copyWith(isDone: false));
+      emit(
+        TaskState(
+          allTasks: allTasks,
+        ),
+      );
+    });
+
+    on<DeleteTask>(
+      (event, emit) {
+        final state = this.state;
+        final task = event.task;
+        List<Task> allTasks = List.from(state.allTasks)..remove(task);
+        emit(
+          TaskState(
+            allTasks: allTasks,
+          ),
+        );
+      },
+    );
+
+    on<UndoDelteTask>(
+      (event, emit) {
+        final state = this.state;
+        final task = event.task;
+        final index = event.index;
+        List<Task> allTasks = List.from(state.allTasks)..insert(index, task);
+        emit(
+          TaskState(
+            allTasks: allTasks,
+          ),
+        );
+      },
+    );
   }
 }

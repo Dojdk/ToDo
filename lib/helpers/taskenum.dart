@@ -1,4 +1,0 @@
-enum Tasktype{
-  business,
-  personal,
-}

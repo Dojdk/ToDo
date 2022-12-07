@@ -1,7 +1,7 @@
 part of 'task_bloc.dart';
 
 @immutable
-abstract class TaskEvent extends Equatable{
+abstract class TaskEvent extends Equatable {
   const TaskEvent();
   @override
   List<Object> get props => [];
@@ -10,27 +10,21 @@ abstract class TaskEvent extends Equatable{
 class TaskLoadEvent extends TaskEvent {}
 
 class AddTask extends TaskEvent {
-  final Task task;
+  final String taskname;
+  final Tasktype tasktype;
 
-  const AddTask(this.task);
-
-  @override
-  List<Object> get props => [task];
-}
-
-class TaskIsDone extends TaskEvent {
-  final Task task;
-
-  const TaskIsDone(this.task);
+  const AddTask({required this.taskname, required this.tasktype,});
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [
+    taskname,tasktype,
+  ];
 }
 
-class TaskIsNotDone extends TaskEvent {
+class TaskUpdate extends TaskEvent {
   final Task task;
 
-  const TaskIsNotDone(this.task);
+  const TaskUpdate({required this.task});
 
   @override
   List<Object> get props => [task];
@@ -39,7 +33,17 @@ class TaskIsNotDone extends TaskEvent {
 class DeleteTask extends TaskEvent {
   final Task task;
 
-  const DeleteTask(this.task);
+  const DeleteTask({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}
+
+class UndoDelteTask extends TaskEvent {
+  final Task task;
+  final int index;
+
+  const UndoDelteTask({required this.index, required this.task});
 
   @override
   List<Object> get props => [task];

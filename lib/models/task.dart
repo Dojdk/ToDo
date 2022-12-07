@@ -1,6 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-import '../helpers/taskenum.dart';
+enum Tasktype {
+  business,
+  personal,
+}
 
 class Task extends Equatable {
   final String id;
@@ -25,4 +29,18 @@ class Task extends Equatable {
     Task(id: '4', tasktype: Tasktype.business, name: 'Buy Butter'),
     Task(id: '5', tasktype: Tasktype.personal, name: 'Buy Cheese'),
   ];
+
+  Task copyWith({
+    String? id,
+    String? name,
+    bool? isDone,
+    Tasktype? tasktype,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      isDone: isDone ?? this.isDone,
+      tasktype: tasktype ?? this.tasktype,
+    );
+  }
 }
