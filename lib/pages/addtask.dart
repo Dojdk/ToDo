@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/task.dart';
+import 'package:todo/widgets/addtask/dropdown.dart';
 
 import '../bloc/task_bloc.dart';
 import '../theme/colors.dart';
@@ -14,11 +15,18 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  Tasktype tasktype = Tasktype.personal;
+
+  void _updateTaskType(Tasktype type) {
+    tasktype = type;
+  }
+
   final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -62,32 +70,34 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: SizedBox(
-                height: 50,
-                width: 150,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: blue,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TypeDeopDown(update: _updateTaskType),
+                SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: blue,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
                     ),
+                    onPressed: () {
+                      context.read<TaskBloc>().add(
+                            AddTask(
+                                taskname: controller.text, tasktype: tasktype),
+                          );
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('New Task'),
                   ),
-                  onPressed: () {
-                    context.read<TaskBloc>().add(
-                          AddTask(
-                              taskname: controller.text,
-                              tasktype: Tasktype.personal),
-                        );
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('New Task'),
                 ),
-              ),
+              ],
             ),
           ],
         ),

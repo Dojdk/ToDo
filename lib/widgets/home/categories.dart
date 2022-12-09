@@ -2,6 +2,7 @@ import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 import 'package:flutter/material.dart';
 
+import '../../helpers/getcolor.dart';
 import '../../models/task.dart';
 import '../../theme/colors.dart';
 
@@ -18,6 +19,9 @@ class CategoriesList extends StatelessWidget {
         final int amount = tasks
             .where((element) => element.tasktype == Tasktype.values[index])
             .length;
+        if (amount == 0) {
+          return const SizedBox.shrink();
+        }
         return Container(
           margin: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
           width: 200,
@@ -59,8 +63,7 @@ class CategoriesList extends StatelessWidget {
                     value: tasks.isEmpty ? 0 : amount / tasks.length,
                     backgroundColor: const Color(0xffd3d4dd),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Tasktype.values[index] == Tasktype.business ? pink : blue,
-                    ),
+                        getcolor(tasktype: Tasktype.values[index])),
                   ),
                 )
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/helpers/getcolor.dart';
 import 'package:todo/models/task.dart';
 
 import '../../bloc/task_bloc.dart';
@@ -27,16 +28,6 @@ class _ListItemState extends State<ListItem> {
         );
   }
 
-  bool isTapped = false;
-
-  Future<bool> confirmDismiss() async {
-    if (isTapped) {
-      isTapped = false;
-      return false;
-    }
-    return true;
-  }
-
   Widget _dismissBackground() {
     return Container(
       height: 60,
@@ -60,9 +51,7 @@ class _ListItemState extends State<ListItem> {
                   ),
                 ),
               ),
-              onPressed: () {
-                isTapped = true;
-              },
+              onPressed: () {},
               child: const Text(
                 'UNDO',
                 style: TextStyle(color: fancyblack),
@@ -78,9 +67,6 @@ class _ListItemState extends State<ListItem> {
   Widget build(BuildContext context) {
     return Dismissible(
       key: widget.itemKey,
-      confirmDismiss: (_) async {
-        return await confirmDismiss();
-      },
       resizeDuration: const Duration(seconds: 2),
       direction: DismissDirection.endToStart,
       background: _dismissBackground(),
@@ -103,7 +89,7 @@ class _ListItemState extends State<ListItem> {
             children: [
               Checkbox(
                 fillColor: MaterialStateProperty.all<Color>(
-                    widget.task.tasktype == Tasktype.business ? pink : blue),
+                    getcolor(tasktype: widget.task.tasktype)),
                 value: widget.task.isDone,
                 shape: const CircleBorder(),
                 onChanged: _onChanged,

@@ -17,6 +17,31 @@ class HomePage extends StatelessWidget {
     return BlocBuilder<TaskBloc, TaskState>(
       builder: (context, state) {
         List<Task> tasks = state.allTasks;
+
+        Widget bodyWithoutText() {
+          return Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'CATEGORIES',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(height: 150, child: CategoriesList(tasks: tasks)),
+                Text(
+                  'Today\'s Tasks',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                Expanded(
+                    child: TaskList(
+                  tasks: tasks,
+                )),
+              ],
+            ),
+          );
+        }
+
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -66,20 +91,15 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  'CATEGORIES',
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                const SizedBox(height: 10),
-                SizedBox(height: 150, child: CategoriesList(tasks: tasks)),
-                Text(
-                  'Today\'s Tasks',
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                Expanded(
-                    child: TaskList(
-                  tasks: tasks,
-                )),
+                tasks.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No tasks yet\nAdd Task by tapping on blue button',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      )
+                    : bodyWithoutText(),
               ],
             ),
           ),
