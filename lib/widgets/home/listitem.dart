@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/helpers/getcolor.dart';
 import 'package:todo/models/task.dart';
 
-import '../../bloc/task_bloc.dart';
+import '../../cubit/task_cubit.dart';
 import '../../theme/colors.dart';
 
 class ListItem extends StatefulWidget {
@@ -22,11 +22,9 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  void _onChanged(bool? value) {
-    context.read<TaskBloc>().add(
-          TaskUpdate(task: widget.task),
-        );
-  }
+
+  final taskCubit= TaskCubit();
+
 
   Widget _dismissBackground() {
     return Container(
@@ -71,13 +69,10 @@ class _ListItemState extends State<ListItem> {
       direction: DismissDirection.endToStart,
       background: _dismissBackground(),
       onDismissed: (_) {
-        context.read<TaskBloc>().add(
-              DeleteTask(task: widget.task),
-            );
+       
       },
       child: GestureDetector(
         onTap: () {
-          _onChanged(!widget.task.isDone);
         },
         child: Container(
           height: 60,
@@ -92,7 +87,7 @@ class _ListItemState extends State<ListItem> {
                     getcolor(tasktype: widget.task.tasktype)),
                 value: widget.task.isDone,
                 shape: const CircleBorder(),
-                onChanged: _onChanged,
+                onChanged: (bool){},
               ),
               Text(
                 widget.task.name,

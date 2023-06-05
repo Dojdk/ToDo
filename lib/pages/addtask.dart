@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/task.dart';
 import 'package:todo/widgets/addtask/dropdown.dart';
 
-import '../bloc/task_bloc.dart';
+import '../cubit/task_cubit.dart';
 import '../theme/colors.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -22,6 +21,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   final controller = TextEditingController();
+
+  final taskCubit = TaskCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +89,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     onPressed: () {
-                      context.read<TaskBloc>().add(
-                            AddTask(
-                                taskname: controller.text, tasktype: tasktype),
-                          );
+                      taskCubit.loadTasks();
                       Navigator.of(context).pop();
                     },
                     child: const Text('New Task'),
