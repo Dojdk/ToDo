@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/models/task.dart';
 import 'package:todo/widgets/home/categories.dart';
 import 'package:todo/widgets/home/tasklist.dart';
 
 import '../cubit/task_cubit.dart';
 import '../theme/colors.dart';
+import 'addtask.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,10 +16,11 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BlocProvider.of<TaskCubit>(context).addTask(
-              Task(id: '1', tasktype: Tasktype.personal, name: 'name'));
+          Navigator.of(context).pushNamed(AddTaskPage.routeName);
         },
-        foregroundColor: Colors.white,
+        child: const Icon(
+          Icons.add,
+        ),
       ),
       body: SafeArea(
         child: BlocBuilder<TaskCubit, TaskState>(
@@ -46,27 +47,19 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    Text(
+                      'CATEGORIES',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(height: 150, child: CategoriesList(tasks: tasks)),
+                    Text(
+                      'Today\'s Tasks',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'CATEGORIES',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                              height: 150, child: CategoriesList(tasks: tasks)),
-                          Text(
-                            'Today\'s Tasks',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Expanded(
-                            child: TaskList(
-                              tasks: tasks,
-                            ),
-                          ),
-                        ],
+                      child: TaskList(
+                        tasks: tasks,
                       ),
                     ),
                   ],

@@ -41,7 +41,7 @@ class CategoriesList extends StatelessWidget {
                 ),
                 Text(
                   '$amount tasks',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(
                   height: 10,

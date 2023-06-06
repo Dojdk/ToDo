@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/task.dart';
 import 'package:todo/widgets/addtask/dropdown.dart';
 
@@ -15,14 +16,11 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   Tasktype tasktype = Tasktype.personal;
-
   void _updateTaskType(Tasktype type) {
     tasktype = type;
   }
 
   final controller = TextEditingController();
-
-  final taskCubit = TaskCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     onPressed: () {
-                      taskCubit.loadTasks();
+                      BlocProvider.of<TaskCubit>(context).addTask(Task(
+                        id: 0,
+                        name: controller.text,
+                        tasktype: tasktype,
+                      ));
                       Navigator.of(context).pop();
                     },
                     child: const Text('New Task'),

@@ -22,9 +22,17 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
+  late TaskCubit taskCubit;
+  @override
+  void initState() {
+    super.initState();
+    taskCubit = BlocProvider.of<TaskCubit>(context);
+  }
 
-  final taskCubit= TaskCubit();
-
+  bool delete = true;
+  bool first = true;
+  Task? _deletedTask;
+  int? _deletedTaskIndex;
 
   Widget _dismissBackground() {
     return Container(
@@ -49,7 +57,9 @@ class _ListItemState extends State<ListItem> {
                   ),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                delete = false;
+              },
               child: const Text(
                 'UNDO',
                 style: TextStyle(color: fancyblack),
@@ -65,15 +75,25 @@ class _ListItemState extends State<ListItem> {
   Widget build(BuildContext context) {
     return Dismissible(
       key: widget.itemKey,
-      resizeDuration: const Duration(seconds: 2),
       direction: DismissDirection.endToStart,
+      resizeDuration: const Duration(seconds: 1),
       background: _dismissBackground(),
+      onUpdate: (details) {
+        if (first) {
+          delete = true;
+          first = false;
+        }
+      },
       onDismissed: (_) {
-       
+        taskCubit.removeTask(widget.task);
+      },
+      confirmDismiss: (direction) async {
+        await Future.delayed(const Duration(seconds: 1));
+        first = true;
+        return delete;
       },
       child: GestureDetector(
-        onTap: () {
-        },
+        onTap: () {},
         child: Container(
           height: 60,
           margin: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
@@ -87,7 +107,7 @@ class _ListItemState extends State<ListItem> {
                     getcolor(tasktype: widget.task.tasktype)),
                 value: widget.task.isDone,
                 shape: const CircleBorder(),
-                onChanged: (bool){},
+                onChanged: (bool) {},
               ),
               Text(
                 widget.task.name,
