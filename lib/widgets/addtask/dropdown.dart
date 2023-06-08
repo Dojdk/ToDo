@@ -1,41 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/task.dart';
+import '../../cubit/type/type_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../helpers/getcolor.dart';
+import '../../models/type.dart';
 
-class TypeDeopDown extends StatefulWidget {
+class TypeDropDown extends StatefulWidget {
   final Function update;
-  const TypeDeopDown({super.key, required this.update});
+  const TypeDropDown({super.key, required this.update});
 
   @override
-  State<TypeDeopDown> createState() => _TypeDeopDownState();
+  State<TypeDropDown> createState() => _TypeDeopDownState();
 }
 
-class _TypeDeopDownState extends State<TypeDeopDown> {
-  Tasktype tasktype = Tasktype.personal;
+class _TypeDeopDownState extends State<TypeDropDown> {
+  late final types = BlocProvider.of<TypeCubit>(context).getTypes;
+  late TaskType tasktype = types[0];
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
-        underline: const SizedBox.shrink(),
-        value: tasktype,
-        items: Tasktype.values
-            .map(
-              (e) => DropdownMenuItem(
-                value: e,
-                child: Text(
-                  e.name,
-                  style: TextStyle(
-                    color: getcolor(tasktype: e),
-                  ),
+      underline: const SizedBox.shrink(),
+      value: types[0],
+      items: types
+          .map<DropdownMenuItem<TaskType>>(
+            (e) => DropdownMenuItem<TaskType>(
+              value: e,
+              child: Text(
+                e.name,
+                style: TextStyle(
+                  color: e.color,
                 ),
               ),
-            )
-            .toList(),
-        onChanged: (value) {
-          setState(() {
-            tasktype = value as Tasktype;
+            ),
+          )
+          .toList(),
+      onChanged: (value) {
+        setState(
+          () {
+            tasktype = value as TaskType;
             widget.update(tasktype);
-          });
-        });
+          },
+        );
+      },
+    );
   }
 }

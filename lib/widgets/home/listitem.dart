@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/helpers/getcolor.dart';
 import 'package:todo/models/task.dart';
 
-import '../../cubit/task_cubit.dart';
+import '../../cubit/task/task_cubit.dart';
 import '../../theme/colors.dart';
 
 class ListItem extends StatefulWidget {
@@ -31,8 +30,6 @@ class _ListItemState extends State<ListItem> {
 
   bool delete = true;
   bool first = true;
-  Task? _deletedTask;
-  int? _deletedTaskIndex;
 
   Widget _dismissBackground() {
     return Container(
@@ -93,7 +90,11 @@ class _ListItemState extends State<ListItem> {
         return delete;
       },
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          final task = widget.task;
+          task.isDone = !task.isDone;
+          taskCubit.updateTask(task);
+        },
         child: Container(
           height: 60,
           margin: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
@@ -102,13 +103,13 @@ class _ListItemState extends State<ListItem> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Checkbox(
-                fillColor: MaterialStateProperty.all<Color>(
-                    getcolor(tasktype: widget.task.tasktype)),
-                value: widget.task.isDone,
-                shape: const CircleBorder(),
-                onChanged: (bool) {},
+              const SizedBox(width: 10),
+              Icon(
+                size: 25,
+                widget.task.isDone ? Icons.check_circle : Icons.circle_outlined,
+                color:  widget.task.tasktype.color,
               ),
+              const SizedBox(width: 10),
               Text(
                 widget.task.name,
                 style: TextStyle(

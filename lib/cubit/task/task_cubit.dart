@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/task.dart';
+import '../../models/task.dart';
 
 part 'task_state.dart';
 
@@ -9,12 +9,7 @@ class TaskCubit extends Cubit<TaskState> {
   void loadTasks() async {
     emit(TaskLoading());
     await Future.delayed(const Duration(seconds: 1));
-    emit(TaskLoaded([
-      Task(id: 1, name: 'Task 1', tasktype: Tasktype.personal, isDone: false),
-      Task(id: 2, name: 'Task 2', tasktype: Tasktype.personal, isDone: false),
-      Task(id: 3, name: 'Task 3', tasktype: Tasktype.personal, isDone: false),
-      Task(id: 4, name: 'Task 4', tasktype: Tasktype.personal, isDone: false),
-    ]));
+    emit(TaskLoaded([]));
   }
 
   void addTask(Task task) {
@@ -22,6 +17,16 @@ class TaskCubit extends Cubit<TaskState> {
     if (state is TaskLoaded) {
       final tasks = state.tasks;
       tasks.add(task);
+      emit(TaskLoaded(tasks));
+    }
+  }
+
+  void updateTask(Task task) {
+    final state = this.state;
+    if (state is TaskLoaded) {
+      final tasks = state.tasks;
+      final index = tasks.indexWhere((element) => element.id == task.id);
+      tasks[index] = task;
       emit(TaskLoaded(tasks));
     }
   }

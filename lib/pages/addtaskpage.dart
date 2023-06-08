@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/models/task.dart';
 import 'package:todo/widgets/addtask/dropdown.dart';
 
-import '../cubit/task_cubit.dart';
+import '../cubit/type/type_cubit.dart';
+import '../models/type.dart';
 import '../theme/colors.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -15,8 +15,9 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-  Tasktype tasktype = Tasktype.personal;
-  void _updateTaskType(Tasktype type) {
+  late final types = BlocProvider.of<TypeCubit>(context).getTypes;
+  late TaskType tasktype = types[0];
+  void _updateTaskType(TaskType type) {
     tasktype = type;
   }
 
@@ -72,7 +73,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TypeDeopDown(update: _updateTaskType),
+                TypeDropDown(update: _updateTaskType),
                 SizedBox(
                   height: 50,
                   width: 150,
@@ -87,11 +88,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     onPressed: () {
-                      BlocProvider.of<TaskCubit>(context).addTask(Task(
-                        id: 0,
-                        name: controller.text,
-                        tasktype: tasktype,
-                      ));
+                      // BlocProvider.of<TaskCubit>(context).addTask(
+                      //   Task(
+                      //     id: DateTime.now().millisecondsSinceEpoch,
+                      //     name: controller.text,
+                      //     tasktype: tasktype,
+                      //   ),
+                      // );
                       Navigator.of(context).pop();
                     },
                     child: const Text('New Task'),

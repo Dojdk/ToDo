@@ -1,10 +1,11 @@
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../helpers/getcolor.dart';
 import '../../models/task.dart';
 import '../../theme/colors.dart';
+import '../../cubit/type/type_cubit.dart';
 
 class CategoriesList extends StatelessWidget {
   final List<Task> tasks;
@@ -12,13 +13,12 @@ class CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   final types= BlocProvider.of<TypeCubit>(context).getTypes();
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: Tasktype.values.length,
+      itemCount:types.length,
       itemBuilder: (context, index) {
-        final int amount = tasks
-            .where((element) => element.tasktype == Tasktype.values[index])
-            .length;
+        final int amount =1;
         if (amount == 0) {
           return const SizedBox.shrink();
         }
@@ -47,7 +47,7 @@ class CategoriesList extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  toBeginningOfSentenceCase(Tasktype.values[index].name)!,
+                  toBeginningOfSentenceCase(types[index].name)!,
                   style: const TextStyle(
                     color: fancyblack,
                     fontSize: 20,
@@ -63,7 +63,7 @@ class CategoriesList extends StatelessWidget {
                     value: tasks.isEmpty ? 0 : amount / tasks.length,
                     backgroundColor: const Color(0xffd3d4dd),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                        getcolor(tasktype: Tasktype.values[index])),
+                        types[index].color),
                   ),
                 )
               ],

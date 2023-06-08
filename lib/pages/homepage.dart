@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/pages/categorypage.dart';
 import 'package:todo/widgets/home/categories.dart';
 import 'package:todo/widgets/home/tasklist.dart';
 
-import '../cubit/task_cubit.dart';
+import '../cubit/task/task_cubit.dart';
+import '../cubit/type/type_cubit.dart';
 import '../theme/colors.dart';
-import 'addtask.dart';
+import 'addtaskpage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,11 +15,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<TaskCubit>(context).loadTasks();
+    BlocProvider.of<TypeCubit>(context).loadTypes();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(AddTaskPage.routeName);
         },
+        backgroundColor: blue,
         child: const Icon(
           Icons.add,
         ),
@@ -25,12 +29,12 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<TaskCubit, TaskState>(
           builder: (context, state) {
-            if (state is TaskLoading) {
+            if (state is TaskLoading || state is TypeLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
-            if (state is TaskLoaded) {
+            if (state is TaskLoaded && state is TypeLoaded) {
               final tasks = state.tasks;
               if (tasks.isEmpty) return _noTask();
               return Padding(
@@ -47,9 +51,24 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      'CATEGORIES',
-                      style: Theme.of(context).textTheme.headlineSmall,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'CATEGORIES',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(CategoryPage.routeName);
+                          },
+                          child: Text(
+                            'ADD CATEGORY',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 10),
                     SizedBox(height: 150, child: CategoriesList(tasks: tasks)),

@@ -1,13 +1,10 @@
-enum Tasktype {
-  business,
-  personal,
-}
+import 'type.dart';
 
 class Task {
   final int id;
   final String name;
   bool isDone;
-  final Tasktype tasktype;
+  final TaskType tasktype;
 
   Task({
     required this.id,
@@ -15,5 +12,4 @@ class Task {
     required this.name,
     this.isDone = false,
   });
-
 }
