@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/task.dart';
 
 import '../../cubit/task/task_cubit.dart';
+import '../../cubit/type/type_cubit.dart';
 import '../../theme/colors.dart';
 
 class ListItem extends StatefulWidget {
@@ -22,10 +23,12 @@ class ListItem extends StatefulWidget {
 
 class _ListItemState extends State<ListItem> {
   late TaskCubit taskCubit;
+  late final types;
   @override
   void initState() {
     super.initState();
     taskCubit = BlocProvider.of<TaskCubit>(context);
+    types = BlocProvider.of<TypeCubit>(context).getTypes;
   }
 
   bool delete = true;
@@ -107,7 +110,9 @@ class _ListItemState extends State<ListItem> {
               Icon(
                 size: 25,
                 widget.task.isDone ? Icons.check_circle : Icons.circle_outlined,
-                color:  widget.task.tasktype.color,
+                color: types
+                    .firstWhere((element) => element.id == widget.task.typeId)
+                    .color,
               ),
               const SizedBox(width: 10),
               Text(

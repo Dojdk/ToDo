@@ -10,6 +10,7 @@ import 'cubit/task/task_cubit.dart';
 import 'cubit/type/type_cubit.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

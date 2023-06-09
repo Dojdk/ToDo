@@ -6,6 +6,8 @@ class TypeInitial extends TypeState {}
 
 class TypeLoading extends TypeState {}
 
+class TypeError extends TypeState {}
+
 class TypeLoaded extends TypeState {
   final List<TaskType> types;
 

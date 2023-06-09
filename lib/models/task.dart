@@ -1,15 +1,23 @@
-import 'type.dart';
 
 class Task {
   final int id;
   final String name;
   bool isDone;
-  final TaskType tasktype;
+  final int typeId;
 
   Task({
     required this.id,
-    required this.tasktype,
+    required this.typeId,
     required this.name,
     this.isDone = false,
   });
+
+  Map<String, Object> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'isDone': isDone ? 1 : 0,
+      'typeId': typeId,
+    };
+  }
 }

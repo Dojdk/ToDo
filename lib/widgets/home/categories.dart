@@ -13,12 +13,15 @@ class CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   final types= BlocProvider.of<TypeCubit>(context).getTypes();
+    final types = BlocProvider.of<TypeCubit>(context).getTypes;
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount:types.length,
+      itemCount: types.length,
       itemBuilder: (context, index) {
-        final int amount =1;
+        final int amount = tasks
+            .where((element) => element.typeId == types[index].id)
+            .toList()
+            .length;
         if (amount == 0) {
           return const SizedBox.shrink();
         }
@@ -62,8 +65,8 @@ class CategoriesList extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: tasks.isEmpty ? 0 : amount / tasks.length,
                     backgroundColor: const Color(0xffd3d4dd),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        types[index].color),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(types[index].color),
                   ),
                 )
               ],

@@ -1,26 +1,31 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
+import '../../helper/db_helper.dart';
 import '../../models/type.dart';
-import '../../theme/colors.dart';
+// import '../../theme/colors.dart';
 
 part 'type_state.dart';
 
 class TypeCubit extends Cubit<TypeState> {
   TypeCubit() : super(TypeInitial());
 
+  final dbHelper = DatabaseHelper.instance;
+
   void loadTypes() async {
     emit(TypeLoading());
-    await Future.delayed(const Duration(seconds: 1));
-    emit(
-      TypeLoaded(
-        [
-          TaskType(name: 'Personal', color: blue),
-          TaskType(name: 'Business', color: pink),
-          TaskType(name: 'Shopping', color: Colors.deepPurple),
-          TaskType(name: 'Party', color: Colors.green),
-        ],
-      ),
-    );
+    try {
+      // await dbHelper.insertType(TaskType(id: 1, name: 'Personal', color: blue));
+      // await dbHelper.insertType(TaskType(id: 2, name: 'Business', color: pink));
+      // await dbHelper.insertType(
+      //     TaskType(id: 3, name: 'Shopping', color: Colors.deepPurple));
+      // await dbHelper
+      //     .insertType(TaskType(id: 4, name: 'Party', color: Colors.green));
+      final types = await dbHelper.getAllTypes();
+      emit(TypeLoaded(types));
+    } catch (e) {
+      print(e);
+      emit(TypeError());
+    }
   }
 
   void addType(TaskType type) {

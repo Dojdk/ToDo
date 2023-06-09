@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/widgets/addtask/dropdown.dart';
 
+import '../cubit/task/task_cubit.dart';
 import '../cubit/type/type_cubit.dart';
+import '../models/task.dart';
 import '../models/type.dart';
 import '../theme/colors.dart';
 
@@ -88,13 +90,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     onPressed: () {
-                      // BlocProvider.of<TaskCubit>(context).addTask(
-                      //   Task(
-                      //     id: DateTime.now().millisecondsSinceEpoch,
-                      //     name: controller.text,
-                      //     tasktype: tasktype,
-                      //   ),
-                      // );
+                      BlocProvider.of<TaskCubit>(context).addTask(
+                        Task(
+                          id: DateTime.now().millisecondsSinceEpoch,
+                          name: controller.text,
+                          typeId: tasktype.id,
+                        ),
+                      );
                       Navigator.of(context).pop();
                     },
                     child: const Text('New Task'),

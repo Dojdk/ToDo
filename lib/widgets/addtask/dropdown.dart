@@ -19,7 +19,7 @@ class _TypeDeopDownState extends State<TypeDropDown> {
   Widget build(BuildContext context) {
     return DropdownButton(
       underline: const SizedBox.shrink(),
-      value: types[0],
+      value: tasktype,
       items: types
           .map<DropdownMenuItem<TaskType>>(
             (e) => DropdownMenuItem<TaskType>(
