@@ -55,9 +55,9 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<int> insertType(TaskType type) async {
+  Future<void> insertType(TaskType type) async {
     final db = await instance.database;
-    return await db.insert(typesTable, type.toMap());
+    await db.insert(typesTable, type.toMap());
   }
 
   Future<List<TaskType>> getAllTypes() async {
@@ -75,9 +75,33 @@ class DatabaseHelper {
     });
   }
 
-  Future<int> insertTask(Task task) async {
+  Future<void> updateType(TaskType type) async {
     final db = await instance.database;
-    return await db.insert(table, task.toMap());
+    await db.update(
+      typesTable,
+      type.toMap(),
+      where: '$columnTypeId = ?',
+      whereArgs: [type.id],
+    );
+  }
+
+  Future<void> deleteType(int typeId) async {
+    final db = await instance.database;
+    await db.delete(
+      table,
+      where: '$columnTypeId = ?',
+      whereArgs: [typeId],
+    );
+    await db.delete(
+      typesTable,
+      where: '$columnTypeId = ?',
+      whereArgs: [typeId],
+    );
+  }
+
+  Future<void> insertTask(Task task) async {
+    final db = await instance.database;
+    await db.insert(table, task.toMap());
   }
 
   Future<List<Task>> getAllTasks() async {
@@ -96,9 +120,9 @@ class DatabaseHelper {
     });
   }
 
-  Future<int> updateTask(Task task) async {
+  Future<void> updateTask(Task task) async {
     final db = await instance.database;
-    return await db.update(
+    await db.update(
       table,
       task.toMap(),
       where: '$columnId = ?',
@@ -106,9 +130,9 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> deleteTask(int taskId) async {
+  Future<void> deleteTask(int taskId) async {
     final db = await instance.database;
-    return await db.delete(
+    await db.delete(
       table,
       where: '$columnId = ?',
       whereArgs: [taskId],

@@ -9,11 +9,9 @@ import '../../models/type.dart';
 
 class ListItem extends StatefulWidget {
   final Task task;
-  final Key itemKey;
   final int index;
   const ListItem({
     super.key,
-    required this.itemKey,
     required this.task,
     required this.index,
   });
@@ -23,16 +21,17 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  late final TaskCubit taskCubit=BlocProvider.of<TaskCubit>(context);
-  late final List<TaskType>  types=BlocProvider.of<TypeCubit>(context).getTypes;
-  
+  late final TaskCubit taskCubit = BlocProvider.of<TaskCubit>(context);
+  late final List<TaskType> types =
+      BlocProvider.of<TypeCubit>(context).getTypes;
+
   bool delete = true;
   bool first = true;
 
   Widget _dismissBackground() {
     return Container(
-      height: 60,
-      margin: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
+      height: 55,
+      margin: const EdgeInsets.only(bottom: 8, top: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -68,57 +67,64 @@ class _ListItemState extends State<ListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: widget.itemKey,
-      direction: DismissDirection.endToStart,
-      resizeDuration: const Duration(seconds: 1),
-      background: _dismissBackground(),
-      onUpdate: (details) {
-        if (first) {
-          delete = true;
-          first = false;
-        }
-      },
-      onDismissed: (_) {
-        taskCubit.removeTask(widget.task);
-      },
-      confirmDismiss: (direction) async {
-        await Future.delayed(const Duration(seconds: 1));
-        first = true;
-        return delete;
-      },
-      child: GestureDetector(
-        onTap: () {
-          final task = widget.task;
-          task.isDone = !task.isDone;
-          taskCubit.updateTask(task);
-        },
-        child: Container(
-          height: 60,
-          margin: const EdgeInsets.only(right: 16, bottom: 8, top: 8),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 10),
-              Icon(
-                size: 25,
-                widget.task.isDone ? Icons.check_circle : Icons.circle_outlined,
-                color: types
-                    .firstWhere((element) => element.id == widget.task.typeId)
-                    .color,
+    return Container(
+      height: 55,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.only(bottom: 8, top: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Dismissible(
+          key: widget.key!,
+          direction: DismissDirection.endToStart,
+          resizeDuration: const Duration(seconds: 1),
+          background: _dismissBackground(),
+          onUpdate: (details) {
+            if (first) {
+              delete = true;
+              first = false;
+            }
+          },
+          onDismissed: (_) {
+            taskCubit.removeTask(widget.task);
+          },
+          confirmDismiss: (direction) async {
+            await Future.delayed(const Duration(seconds: 1));
+            first = true;
+            return delete;
+          },
+          child: GestureDetector(
+            onTap: () {
+              final task = widget.task;
+              task.isDone = !task.isDone;
+              taskCubit.updateTask(task);
+            },
+            child: Center(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 10),
+                  Icon(
+                    size: 25,
+                    widget.task.isDone
+                        ? Icons.check_circle
+                        : Icons.circle_outlined,
+                    color: types
+                        .firstWhere((element) => element.id == widget.task.typeId)
+                        .color,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    widget.task.name,
+                    style: taskTitle.copyWith(
+                      decorationThickness: 2,
+                      decoration:
+                          widget.task.isDone ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Text(
-                widget.task.name,
-                style: taskTitle.copyWith(
-                  decorationThickness: 2,
-                  decoration:
-                      widget.task.isDone ? TextDecoration.lineThrough : null,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

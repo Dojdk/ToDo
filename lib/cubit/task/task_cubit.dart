@@ -19,13 +19,17 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  void addTask(Task task) {
+  void addTask(Task task) async{
     final state = this.state;
     if (state is TaskLoaded) {
-      final tasks = state.tasks;
-      tasks.add(task);
-      dbHelper.insertTask(task);
-      emit(TaskLoaded(tasks));
+      try {
+       await dbHelper.insertTask(task);
+        final tasks = state.tasks;
+        tasks.add(task);
+        emit(TaskLoaded(tasks));
+      } catch (e) {
+        emit(TaskError());
+      }
     }
   }
 
@@ -39,12 +43,17 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  void removeTask(Task task) {
+  void removeTask(Task task) async{
     final state = this.state;
     if (state is TaskLoaded) {
+      try{
+      await dbHelper.deleteTask(task.id);
       final tasks = state.tasks;
       tasks.remove(task);
       emit(TaskLoaded(tasks));
+      }catch(e){
+        emit(TaskError());
+      }
     }
   }
 }

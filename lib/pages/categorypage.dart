@@ -34,6 +34,23 @@ class CategoryPage extends StatelessWidget {
             );
           }
           if (state is TypeLoaded) {
+            if (state.types.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      textAlign: TextAlign.center,
+                      'No categories yet.\nAdd by pressing + button.',
+                      style: headline,
+                    ),
+                    Image.asset(
+                      'assets/images/png/emptychest.png',
+                    ),
+                  ],
+                ),
+              );
+            }
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -41,16 +58,10 @@ class CategoryPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Category Page',
+                      'YOUR CATEGORIES:',
                       style: headline,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'YOUR CATEGORIES',
-                      style: headlineSmall,
-                    ),
+                 
                     Expanded(
                       child: ListView.builder(
                         itemBuilder: (context, index) =>

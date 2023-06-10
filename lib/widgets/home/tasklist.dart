@@ -12,7 +12,7 @@ class TaskList extends StatelessWidget {
     return ListView.builder(
       itemCount: tasks.length,
       itemBuilder: (context, index) => ListItem(
-        itemKey: ValueKey(tasks[index].id),
+        key: UniqueKey(),
         task: tasks[index],
         index: index,
       ),

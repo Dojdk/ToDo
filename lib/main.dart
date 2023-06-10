@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/theme/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 
 import '../pages/homepage.dart';
 import '../pages/addtaskpage.dart';
@@ -11,6 +12,8 @@ import 'cubit/type/type_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: lightGrey));
   runApp(const MyApp());
 }
 
@@ -28,9 +31,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        
         debugShowCheckedModeBanner: false,
         title: 'ToDo App',
         theme: ThemeData(
+          scaffoldBackgroundColor: lightGrey,
           fontFamily: 'Poppins',
           textTheme: const TextTheme(
             headlineSmall: TextStyle(

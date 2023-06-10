@@ -56,6 +56,9 @@ class HomePage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
                             const Text(
                               'What\'s up, Cutie!',
                               style: headline,
@@ -161,6 +164,7 @@ Widget _pageStart(BuildContext context, bool categorie) {
             ),
           ],
         ),
+        const SizedBox(height: 20),
         Center(
           child: Text(
             textAlign: TextAlign.center,
@@ -170,6 +174,10 @@ Widget _pageStart(BuildContext context, bool categorie) {
             style: headline,
           ),
         ),
+        const SizedBox(
+          height: 30,
+        ),
+        Center(child: Image.asset('assets/images/png/emptychest.png'))
       ],
     ),
   );
