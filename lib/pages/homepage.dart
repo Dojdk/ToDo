@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/task/task_cubit.dart';
 import '../cubit/type/type_cubit.dart';
+import '../models/type.dart';
 import '../theme/colors.dart';
+import '../theme/textstyle.dart';
 import '../widgets/home/categories.dart';
 import '../widgets/home/tasklist.dart';
 import 'addtaskpage.dart';
@@ -16,10 +18,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<TaskCubit>(context).loadTasks();
     BlocProvider.of<TypeCubit>(context).loadTypes();
+    List<TaskType> checktypes = [];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(AddTaskPage.routeName);
+          if (checktypes.isEmpty) {
+            Navigator.of(context).pushNamed(CategoryPage.routeName);
+          } else {
+            Navigator.of(context).pushNamed(AddTaskPage.routeName);
+          }
         },
         backgroundColor: blue,
         child: const Icon(
@@ -31,11 +38,6 @@ class HomePage extends StatelessWidget {
           builder: (context, typeState) {
             return BlocBuilder<TaskCubit, TaskState>(
               builder: (context, taskState) {
-                if (typeState is TypeError || taskState is TaskError) {
-                  return const Center(
-                    child: Text('Error'),
-                  );
-                }
                 if (taskState is TaskLoading || TypeState is TypeLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -43,79 +45,81 @@ class HomePage extends StatelessWidget {
                 }
                 if (taskState is TaskLoaded && typeState is TypeLoaded) {
                   final tasks = taskState.tasks;
-                  if (tasks.isEmpty) return _noTask();
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'What\'s up, Joy!',
-                          style: TextStyle(
-                            color: fancyblack,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  final types = typeState.types;
+                  checktypes = types;
+                  if (types.isEmpty) return _pageStart(context, true);
+                  if (tasks.isEmpty) return _pageStart(context, false);
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'CATEGORIES',
-                              style: Theme.of(context).textTheme.headlineSmall,
+                            const Text(
+                              'What\'s up, Cutie!',
+                              style: headline,
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(CategoryPage.routeName);
-                              },
-                              child: Text(
-                                'ADD CATEGORY',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
-                              ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'CATEGORIES',
+                                  style: headlineSmall,
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed(CategoryPage.routeName);
+                                  },
+                                  child: const Text(
+                                    'ADD CATEGORY',
+                                    style: headlineSmall,
+                                  ),
+                                ),
+                              ],
                             ),
+                            const SizedBox(height: 10),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                            height: 150, child: CategoriesList(tasks: tasks)),
-                        Text(
-                          'Today\'s Tasks',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        Expanded(
-                          child: TaskList(
-                            tasks: tasks,
+                      ),
+                      SizedBox(
+                          height: 150, child: CategoriesList(tasks: tasks)),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              const Text(
+                                'YOUR TASKS',
+                                style: headlineSmall,
+                              ),
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: TaskList(
+                                  tasks: tasks,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 } else {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'What\'s up, Joy!',
-                          style: TextStyle(
-                            color: fancyblack,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            'No tasks yet\nAdd Task by tapping on blue button',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 25),
-                          ),
-                        ),
-                      ],
+                  return const Center(
+                    child: Text(
+                      'Seems like something went wrong\nPlease try again later',
+                      textAlign: TextAlign.center,
+                      style: headline,
                     ),
                   );
                 }
@@ -128,12 +132,45 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget _noTask() {
-  return const Center(
-    child: Text(
-      'No tasks yet\nAdd Task by tapping on blue button',
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 25),
+Widget _pageStart(BuildContext context, bool categorie) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'What\'s up, Cutie!',
+          style: headline,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'CATEGORIES',
+              style: headlineSmall,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(CategoryPage.routeName);
+              },
+              child: const Text(
+                'ADD CATEGORY',
+                style: headlineSmall,
+              ),
+            ),
+          ],
+        ),
+        Center(
+          child: Text(
+            textAlign: TextAlign.center,
+            categorie
+                ? 'You don\'t have any categories yet.\nPlease add some to start using the app'
+                : 'There is no task yet.\nPress button below to add your first task',
+            style: headline,
+          ),
+        ),
+      ],
     ),
   );
 }

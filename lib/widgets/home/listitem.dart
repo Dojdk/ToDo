@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/task.dart';
+import 'package:todo/theme/textstyle.dart';
 
 import '../../cubit/task/task_cubit.dart';
 import '../../cubit/type/type_cubit.dart';
-import '../../theme/colors.dart';
+import '../../models/type.dart';
 
 class ListItem extends StatefulWidget {
   final Task task;
@@ -22,15 +23,9 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  late TaskCubit taskCubit;
-  late final types;
-  @override
-  void initState() {
-    super.initState();
-    taskCubit = BlocProvider.of<TaskCubit>(context);
-    types = BlocProvider.of<TypeCubit>(context).getTypes;
-  }
-
+  late final TaskCubit taskCubit=BlocProvider.of<TaskCubit>(context);
+  late final List<TaskType>  types=BlocProvider.of<TypeCubit>(context).getTypes;
+  
   bool delete = true;
   bool first = true;
 
@@ -62,7 +57,7 @@ class _ListItemState extends State<ListItem> {
               },
               child: const Text(
                 'UNDO',
-                style: TextStyle(color: fancyblack),
+                style: taskTitle,
               ),
             )
           ],
@@ -117,12 +112,10 @@ class _ListItemState extends State<ListItem> {
               const SizedBox(width: 10),
               Text(
                 widget.task.name,
-                style: TextStyle(
+                style: taskTitle.copyWith(
                   decorationThickness: 2,
                   decoration:
                       widget.task.isDone ? TextDecoration.lineThrough : null,
-                  color: fancyblack,
-                  fontSize: 18,
                 ),
               ),
             ],

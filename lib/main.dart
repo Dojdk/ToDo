@@ -27,27 +27,27 @@ class MyApp extends StatelessWidget {
           create: (context) => TypeCubit(),
         ),
       ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'ToDo App',
-          theme: ThemeData(
-            fontFamily: 'Poppins',
-            textTheme: const TextTheme(
-              headlineSmall: TextStyle(
-                fontSize: 12,
-                color: fancygrey,
-                fontWeight: FontWeight.bold,
-              ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'ToDo App',
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          textTheme: const TextTheme(
+            headlineSmall: TextStyle(
+              fontSize: 12,
+              color: grey,
+              fontWeight: FontWeight.bold,
             ),
-            appBarTheme:
-                AppBarTheme(color: Theme.of(context).scaffoldBackgroundColor),
           ),
-          home: const HomePage(),
-          routes: {
-            AddTaskPage.routeName: (context) => const AddTaskPage(),
-            CategoryPage.routeName: (context) => const CategoryPage(),
-          },
+          appBarTheme:
+              AppBarTheme(color: Theme.of(context).scaffoldBackgroundColor),
         ),
+        home: const HomePage(),
+        routes: {
+          AddTaskPage.routeName: (context) => const AddTaskPage(),
+          CategoryPage.routeName: (context) => const CategoryPage(),
+        },
+      ),
     );
   }
 }

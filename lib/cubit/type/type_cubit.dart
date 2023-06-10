@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter/material.dart';
 import '../../helper/db_helper.dart';
 import '../../models/type.dart';
@@ -14,16 +14,9 @@ class TypeCubit extends Cubit<TypeState> {
   void loadTypes() async {
     emit(TypeLoading());
     try {
-      // await dbHelper.insertType(TaskType(id: 1, name: 'Personal', color: blue));
-      // await dbHelper.insertType(TaskType(id: 2, name: 'Business', color: pink));
-      // await dbHelper.insertType(
-      //     TaskType(id: 3, name: 'Shopping', color: Colors.deepPurple));
-      // await dbHelper
-      //     .insertType(TaskType(id: 4, name: 'Party', color: Colors.green));
       final types = await dbHelper.getAllTypes();
       emit(TypeLoaded(types));
     } catch (e) {
-      print(e);
       emit(TypeError());
     }
   }
@@ -31,8 +24,13 @@ class TypeCubit extends Cubit<TypeState> {
   void addType(TaskType type) {
     final currentState = state;
     if (currentState is TypeLoaded) {
-      final List<TaskType> updatedTypes = [...currentState.types, type];
-      emit(TypeLoaded(updatedTypes));
+      try {
+        final List<TaskType> updatedTypes = [...currentState.types, type];
+        dbHelper.insertType(type);
+        emit(TypeLoaded(updatedTypes));
+      } catch (e) {
+        emit(TypeError());
+      }
     }
   }
 

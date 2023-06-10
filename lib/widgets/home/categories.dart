@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/task.dart';
-import '../../theme/colors.dart';
+import '../../theme/textstyle.dart';
 import '../../cubit/type/type_cubit.dart';
 
 class CategoriesList extends StatelessWidget {
@@ -15,6 +15,7 @@ class CategoriesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final types = BlocProvider.of<TypeCubit>(context).getTypes;
     return ListView.builder(
+      padding: const EdgeInsets.only(left: 20),
       scrollDirection: Axis.horizontal,
       itemCount: types.length,
       itemBuilder: (context, index) {
@@ -44,18 +45,14 @@ class CategoriesList extends StatelessWidget {
                 ),
                 Text(
                   '$amount tasks',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: typeAmount,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(
                   toBeginningOfSentenceCase(types[index].name)!,
-                  style: const TextStyle(
-                    color: fancyblack,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: taskType,
                 ),
                 const SizedBox(
                   height: 20,

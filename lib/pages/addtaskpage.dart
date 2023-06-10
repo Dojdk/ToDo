@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo/widgets/addtask/dropdown.dart';
 
+import '../theme/textstyle.dart';
+import '../widgets/addtask/dropdown.dart';
 import '../cubit/task/task_cubit.dart';
 import '../cubit/type/type_cubit.dart';
 import '../models/task.dart';
@@ -64,10 +65,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 maxLines: 8,
                 cursorColor: blue,
                 cursorHeight: 50,
-                style: const TextStyle(fontSize: 30),
+                style: headline,
                 decoration: const InputDecoration(
                   hintText: 'Enter New Task',
-                  hintStyle: TextStyle(fontSize: 30),
+                  hintStyle: headline,
                   border: InputBorder.none,
                 ),
               ),
