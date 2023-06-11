@@ -7,8 +7,13 @@ import '../../cubit/type/type_cubit.dart';
 import '../../theme/textstyle.dart';
 
 class CreatePopUp extends StatefulWidget {
+  final String? name;
+  final Color? color;
+  final int? id;
   const CreatePopUp({
     super.key,
+    this.name,
+    this.color, this.id,
   });
 
   @override
@@ -17,16 +22,32 @@ class CreatePopUp extends StatefulWidget {
 
 class _CreatePopUpState extends State<CreatePopUp> {
   late final cubit = BlocProvider.of<TypeCubit>(context);
-
   final textController = TextEditingController();
   Color selectedColor = Colors.white;
+  late final bool isEdit = widget.name != null;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.name != null) {
+      textController.text = widget.name!;
+    }
+    if (widget.color != null) {
+      selectedColor = widget.color!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      title: const Text('Add Category'),
+      title:  Text(
+        isEdit ? 'Edit Category' :
+        'Add Category',
+        style: headlineSmall,
+        textAlign: TextAlign.center,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -41,7 +62,7 @@ class _CreatePopUpState extends State<CreatePopUp> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 15,
           ),
           GestureDetector(
             onTap: () async {
@@ -79,17 +100,32 @@ class _CreatePopUpState extends State<CreatePopUp> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: const Text(
+            'Cancel',
+            style: headlineSmallBlue,
+          ),
         ),
         TextButton(
           onPressed: () {
+            if (isEdit) {
+              cubit.updateType(TaskType(
+                  id: widget.id!,
+                  name: textController.text,
+                  color: selectedColor));
+              Navigator.of(context).pop();
+              return;
+            }
             cubit.addType(TaskType(
                 id: DateTime.now().millisecondsSinceEpoch,
                 name: textController.text,
                 color: selectedColor));
             Navigator.of(context).pop();
           },
-          child: const Text('Add'),
+          child:  Text(
+isEdit ? 'Edit' :
+            'Add',
+            style: headlineSmallBlue,
+          ),
         ),
       ],
     );

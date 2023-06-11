@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/errorwidget.dart';
 import '../cubit/task/task_cubit.dart';
 import '../cubit/type/type_cubit.dart';
 import '../models/type.dart';
@@ -47,8 +48,11 @@ class HomePage extends StatelessWidget {
                   final tasks = taskState.tasks;
                   final types = typeState.types;
                   checktypes = types;
-                  if (types.isEmpty) return _pageStart(context, true);
-                  if (tasks.isEmpty) return _pageStart(context, false);
+                  if (types.isEmpty) {
+                    return _pageStart(context, true);
+                  } else if (tasks.isEmpty) {
+                    return _pageStart(context, false);
+                  }
                   return Column(
                     children: [
                       Padding(
@@ -82,7 +86,7 @@ class HomePage extends StatelessWidget {
                                         .pushNamed(CategoryPage.routeName);
                                   },
                                   child: const Text(
-                                    'ADD CATEGORY',
+                                    'MANAGE CATEGORY',
                                     style: headlineSmall,
                                   ),
                                 ),
@@ -94,37 +98,30 @@ class HomePage extends StatelessWidget {
                       ),
                       SizedBox(
                           height: 150, child: CategoriesList(tasks: tasks)),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 10),
+                            Text(
+                              'YOUR TASKS:',
+                              style: headlineSmall,
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10),
-                              const Text(
-                                'YOUR TASKS',
-                                style: headlineSmall,
-                              ),
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: TaskList(
-                                  tasks: tasks,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: TaskList(
+                          tasks: tasks,
                         ),
                       ),
                     ],
                   );
                 } else {
-                  return const Center(
-                    child: Text(
-                      'Seems like something went wrong\nPlease try again later',
-                      textAlign: TextAlign.center,
-                      style: headline,
-                    ),
-                  );
+                  return const ErrorStateWidget();
                 }
               },
             );
@@ -158,7 +155,7 @@ Widget _pageStart(BuildContext context, bool categorie) {
                 Navigator.of(context).pushNamed(CategoryPage.routeName);
               },
               child: const Text(
-                'ADD CATEGORY',
+                'MANAGE CATEGORY',
                 style: headlineSmall,
               ),
             ),
@@ -169,7 +166,7 @@ Widget _pageStart(BuildContext context, bool categorie) {
           child: Text(
             textAlign: TextAlign.center,
             categorie
-                ? 'You don\'t have any categories yet.\nPlease add some to start using the app'
+                ? 'You don\'t have any categories yet.\nPress button below to add category and start using app'
                 : 'There is no task yet.\nPress button below to add your first task',
             style: headline,
           ),

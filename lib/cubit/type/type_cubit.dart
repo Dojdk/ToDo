@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter/material.dart';
 import '../../helper/db_helper.dart';
 import '../../models/type.dart';
-// import '../../theme/colors.dart';
+import '../task/task_cubit.dart';
+
 
 part 'type_state.dart';
 
 class TypeCubit extends Cubit<TypeState> {
+  final taskCubit = TaskCubit();
   TypeCubit() : super(TypeInitial());
 
   final dbHelper = DatabaseHelper.instance;
@@ -37,9 +38,29 @@ class TypeCubit extends Cubit<TypeState> {
   void removeType(TaskType type) {
     final currentState = state;
     if (currentState is TypeLoaded) {
-      final List<TaskType> updatedTypes = [...currentState.types];
-      updatedTypes.remove(type);
-      emit(TypeLoaded(updatedTypes));
+      try {
+        dbHelper.deleteType(type.id);
+        final List<TaskType> types = [...currentState.types];
+        types.remove(type);
+        emit(TypeLoaded(types));
+      } catch (e) {
+        emit(TypeError());
+      }
+    }
+  }
+
+  void updateType(TaskType type) {
+    final currentState = state;
+    if (currentState is TypeLoaded) {
+      try {
+        dbHelper.updateType(type);
+        final List<TaskType> types = [...currentState.types];
+        final index = types.indexWhere((element) => element.id == type.id);
+        types[index] = type;
+        emit(TypeLoaded(types));
+      } catch (e) {
+        emit(TypeError());
+      }
     }
   }
 

@@ -13,6 +13,11 @@ const TextStyle headlineSmall = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
+const headlineSmallBlue = TextStyle(
+  color: blue,
+  fontWeight: FontWeight.w500,
+);
+
 const TextStyle typeAmount = TextStyle(
   fontSize: 12,
   color: grey,

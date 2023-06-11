@@ -14,7 +14,6 @@ class TaskList extends StatelessWidget {
       itemBuilder: (context, index) => ListItem(
         key: UniqueKey(),
         task: tasks[index],
-        index: index,
       ),
     );
   }

@@ -2,47 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/errorwidget.dart';
-import '../widgets/category/listitem.dart';
-import '../widgets/category/create_pop_up.dart';
+import '../widgets/home/tasklist.dart';
+import '../cubit/task/task_cubit.dart';
 import '../theme/textstyle.dart';
-import '../theme/colors.dart';
-import '../cubit/type/type_cubit.dart';
 
-class CategoryPage extends StatelessWidget {
-  static const routeName = '/categorypage';
-  const CategoryPage({super.key});
+class TasksPage extends StatelessWidget {
+  static const routeName = '/tasks';
+  const TasksPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final typeId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: blue,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return const CreatePopUp();
-            },
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: BlocBuilder<TypeCubit, TypeState>(
+      body: BlocBuilder<TaskCubit, TaskState>(
         builder: (context, state) {
-          if (state is TypeLoading) {
+          if (state is TaskLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          if (state is TypeLoaded) {
-            if (state.types.isEmpty) {
+          if (state is TaskLoaded) {
+            final neededTasks = state.tasks
+                .where((element) => element.typeId == typeId)
+                .toList();
+            if (neededTasks.isEmpty) {
               return Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       textAlign: TextAlign.center,
-                      'No categories yet.\nAdd by pressing + button.',
+                      'No tasks assigned to this category.',
                       style: headline,
                     ),
                     Image.asset(
@@ -59,15 +48,11 @@ class CategoryPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'YOUR CATEGORIES:',
+                      'YOUR TASKS:',
                       style: headline,
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) =>
-                            ListItem(type: state.types[index]),
-                        itemCount: state.types.length,
-                      ),
+                      child: TaskList(tasks: neededTasks),
                     ),
                   ],
                 ),

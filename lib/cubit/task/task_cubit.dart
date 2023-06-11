@@ -19,11 +19,11 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  void addTask(Task task) async{
+  void addTask(Task task) async {
     final state = this.state;
     if (state is TaskLoaded) {
       try {
-       await dbHelper.insertTask(task);
+        await dbHelper.insertTask(task);
         final tasks = state.tasks;
         tasks.add(task);
         emit(TaskLoaded(tasks));
@@ -33,27 +33,70 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  void updateTask(Task task) {
+  void updateTask(Task task) async {
     final state = this.state;
     if (state is TaskLoaded) {
-      final tasks = state.tasks;
-      final index = tasks.indexWhere((element) => element.id == task.id);
-      tasks[index] = task;
-      emit(TaskLoaded(tasks));
+      try {
+        await dbHelper.updateTask(task);
+        final tasks = state.tasks;
+        final index = tasks.indexWhere((element) => element.id == task.id);
+        tasks[index] = task;
+        emit(TaskLoaded(tasks));
+      } catch (e) {
+        emit(TaskError());
+      }
     }
   }
 
-  void removeTask(Task task) async{
+  void removeTask(Task task) async {
     final state = this.state;
     if (state is TaskLoaded) {
-      try{
-      await dbHelper.deleteTask(task.id);
-      final tasks = state.tasks;
-      tasks.remove(task);
-      emit(TaskLoaded(tasks));
-      }catch(e){
+      try {
+        await dbHelper.deleteTask(task.id);
+        final tasks = state.tasks;
+        tasks.remove(task);
+        emit(TaskLoaded(tasks));
+      } catch (e) {
         emit(TaskError());
       }
+    }
+  }
+
+  void removeMultipleTasks(List<Task> tasks) async {
+    final state = this.state;
+    if (state is TaskLoaded) {
+      try {
+        for (var element in tasks) {
+          await dbHelper.deleteTask(element.id);
+        }
+        final allTasks = state.tasks;
+        for (var element in tasks) {
+          allTasks.remove(element);
+        }
+        emit(TaskLoaded(allTasks));
+      } catch (e) {
+        emit(TaskError());
+      }
+    }
+  }
+
+  void removeTaskByTypeID(int id) async {
+    final state = this.state;
+    if (state is TaskLoaded) {
+      try {
+        final tasks = state.tasks;
+        tasks.removeWhere((element) => element.typeId == id);
+        emit(TaskLoaded(tasks));
+      } catch (e) {
+        emit(TaskError());
+      }
+    }
+  }
+
+  get getTasks {
+    final state = this.state;
+    if (state is TaskLoaded) {
+      return state.tasks;
     }
   }
 }

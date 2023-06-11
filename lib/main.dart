@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:todo/theme/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 
-import '../pages/homepage.dart';
-import '../pages/addtaskpage.dart';
-import '../pages/categorypage.dart';
+import '/theme/colors.dart';
+import '/pages/taskspage.dart';
+import '/pages/homepage.dart';
+import '/pages/addtaskpage.dart';
+import '/pages/categorypage.dart';
 
 import 'cubit/task/task_cubit.dart';
 import 'cubit/type/type_cubit.dart';
@@ -31,7 +32,6 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         title: 'ToDo App',
         theme: ThemeData(
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
         routes: {
           AddTaskPage.routeName: (context) => const AddTaskPage(),
           CategoryPage.routeName: (context) => const CategoryPage(),
+          TasksPage.routeName: (context) => const TasksPage(),
         },
       ),
     );

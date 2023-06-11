@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo/theme/colors.dart';
 import 'package:todo/theme/textstyle.dart';
 
+import 'create_pop_up.dart';
+import 'delete_pop_up.dart';
 import '../../models/type.dart';
 
 class ListItem extends StatelessWidget {
@@ -10,32 +12,57 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Text(
-            type.name,
-            style: taskType.copyWith(
-              color: type.color,
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              type.name,
+              style: taskType.copyWith(
+                color: type.color,
+              ),
             ),
-          ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.edit,
-              color: grey,
+            const Spacer(),
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CreatePopUp(
+                      name: type.name,
+                      color: type.color,
+                      id: type.id,
+                    );
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: grey,
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.delete,
-              color: grey,
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return DeletePopUp(
+                      type: type,
+                    );
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: grey,
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+        const Divider(
+          color: darkBlue,
+        ),
+      ],
     );
   }
 }

@@ -36,6 +36,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           shape: BoxShape.circle,
           border: Border.all(
             width: 1,
+            color: const Color(0xffADBAEB),
           ),
         ),
         margin: const EdgeInsets.only(top: 20.0),
@@ -56,20 +57,20 @@ class _AddTaskPageState extends State<AddTaskPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 200,
-            ),
-            Form(
-              child: TextFormField(
-                controller: controller,
-                maxLines: 8,
-                cursorColor: blue,
-                cursorHeight: 50,
-                style: headline,
-                decoration: const InputDecoration(
-                  hintText: 'Enter New Task',
-                  hintStyle: headline,
-                  border: InputBorder.none,
+            Expanded(
+              child: Center(
+                child: Form(
+                  child: TextFormField(
+                    controller: controller,
+                    cursorColor: blue,
+                    cursorHeight: 50,
+                    style: headline,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter New Task',
+                      hintStyle: headline,
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -104,6 +105,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 50,
             ),
           ],
         ),
