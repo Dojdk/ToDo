@@ -28,6 +28,7 @@ class TasksPage extends StatelessWidget {
             if (neededTasks.isEmpty) {
               return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       textAlign: TextAlign.center,

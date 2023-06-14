@@ -17,7 +17,7 @@ class TaskCubit extends Cubit<TaskState> {
     } catch (e) {
       emit(TaskError());
     }
-  }
+  }  
 
   void addTask(Task task) async {
     final state = this.state;
